@@ -5,7 +5,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const schema = Joi.object({
       name: Joi.string().required(),
-      age: Joi.number()
+      age: Joi.number(),
     });
 
     const { error } = await schema.validate(req.body, { abortEarly: true });
