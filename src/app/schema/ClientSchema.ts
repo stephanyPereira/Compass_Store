@@ -4,7 +4,7 @@ import { IClient } from '../interfaces/IClient';
 const schema = new Schema<IClient>({
   name: { type: String, required: true },
   cpf: { type: String, required: true },
-  birthday: { type: String, required: true },
+  birthday: { type: Date, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true, min: 6 },
   cep: { type: String, required: true },

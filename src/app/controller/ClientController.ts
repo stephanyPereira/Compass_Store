@@ -14,6 +14,14 @@ class ClientController {
     });
     return res.status(201).json(result);
   }
+
+  async findById(req, res) {
+    const { id } = req.params;
+
+    const result = await ClientService.findById(id);
+
+    return res.status(201).json(result);
+  }
 }
 
 export default new ClientController();

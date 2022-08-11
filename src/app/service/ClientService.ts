@@ -4,9 +4,10 @@ import {
   isValidCEP,
   isValidCPF,
 } from '@brazilian-utils/brazilian-utils';
+import ObjectId from 'mongoose';
 import axios from 'axios';
 import { hash } from 'bcryptjs';
-import { isAfter, isValid } from 'date-fns';
+import { format, isAfter, isValid } from 'date-fns';
 
 import AppError from '../../errors/AppError';
 import { IClientBody, IClientResponse } from '../interfaces/IClient';
@@ -40,7 +41,9 @@ class ClientService {
     const year = birthday.split('/')[2];
 
     const date = new Date(
-      `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`,
+      `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(
+        -2,
+      )}T00:00:00.003-03:00`,
     );
 
     if (!isValid(date)) {
@@ -59,13 +62,15 @@ class ClientService {
 
     const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
+    const cepFormat = cep.replace(/\D/g, '');
+
     const result = await ClientRepository.create({
       name,
       cpf: cpfFormat,
-      birthday,
+      birthday: date,
       email,
       password: passwordHash,
-      cep,
+      cep: cepFormat,
       uf: data.uf,
       city: data.localidade,
       address: data.logradouro,
@@ -74,19 +79,24 @@ class ClientService {
       neighborhood: data.bairro,
     });
 
+    return this.findById(result._id.toString());
+  }
+
+  async findById(id: string): Promise<IClientResponse> {
+    if (!ObjectId.isValidObjectId(id)) {
+      throw new AppError('Id entered is not valid');
+    }
+    const client = await ClientRepository.findById(id);
+
+    if (client.length === 0) {
+      throw new AppError('Client not found', 404, 'Not Found');
+    }
+
     return {
-      _id: result._id,
-      name: result.name,
-      cpf: formatCPF(result.cpf),
-      birthday: result.birthday,
-      email: result.email,
-      cep: formatCEP(result.cep),
-      uf: result.uf,
-      city: result.city,
-      address: result.address,
-      number: result.number,
-      complement: result.complement,
-      neighborhood: result.neighborhood,
+      ...client[0],
+      birthday: format(new Date(client[0].birthday), 'dd/MM/yyyy'),
+      cep: formatCEP(client[0].cep),
+      cpf: formatCPF(client[0].cpf),
     };
   }
 }
