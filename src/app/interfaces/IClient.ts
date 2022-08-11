@@ -30,3 +30,13 @@ export interface IClientResponse {
   _id: Types.ObjectId;
   __v?: number;
 }
+
+export interface IClientBody {
+  name: string;
+  cpf: string;
+  birthday: string;
+  email: string;
+  password: string;
+  cep: string;
+  number: number;
+}

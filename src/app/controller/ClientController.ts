@@ -11,12 +11,7 @@ class ClientController {
         email,
         password,
         cep,
-        uf: 'SP',
-        city: 'São Paulo',
-        address: 'Praça da Sé',
         number,
-        complement: '',
-        neighborhood: 'Sé',
       });
       return res.status(201).json(result);
     } catch (error) {
