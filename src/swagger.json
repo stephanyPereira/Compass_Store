@@ -113,6 +113,72 @@
                 }
               } 
             }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Invalid CPF"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
           }
         }
       }
