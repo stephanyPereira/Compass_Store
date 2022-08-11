@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import 'express-async-errors';
 import cors from 'cors';
 import routes from './routes/index.router';
 import './infra/database/mongo/index';
+import AppError from './errors/AppError';
 
 dotenv.config({
   path: '.env',
@@ -33,6 +35,34 @@ class App {
 
   private routes(): void {
     this.server.use('/api/v1', ...routes);
+    this.server.use(
+      (
+        err: Error,
+        request: Request,
+        response: Response,
+        next: NextFunction,
+      ) => {
+        if (err instanceof AppError) {
+          return response.status(err.statusCode).json({
+            message: err.message,
+            details: [
+              {
+                message: err.details,
+              },
+            ],
+          });
+        }
+
+        return response.status(500).json({
+          message: `Internal server error`,
+          details: [
+            {
+              message: err.message,
+            },
+          ],
+        });
+      },
+    );
   }
 }
 
