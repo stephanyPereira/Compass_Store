@@ -55,7 +55,8 @@
           "singleQuote": true,
           "trailingComma": "all",
           "arrowParens": "avoid"
-        }]
+        }],
+       "no-underscore-dangle": "off"
     },
     "settings": {
         "import/resolver": {
