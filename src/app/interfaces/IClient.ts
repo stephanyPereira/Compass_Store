@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 export interface IClient {
   name: string;
   cpf: string;
-  birthday: string;
+  birthday: Date;
   email: string;
   password: string;
   cep: string;
@@ -18,7 +18,7 @@ export interface IClient {
 export interface IClientResponse {
   name: string;
   cpf: string;
-  birthday: string;
+  birthday: string | Date;
   email: string;
   cep: string;
   uf: string;
@@ -28,7 +28,6 @@ export interface IClientResponse {
   complement?: string;
   neighborhood: string;
   _id: Types.ObjectId;
-  __v?: number;
 }
 
 export interface IClientBody {
