@@ -2,9 +2,13 @@ import dotenv from 'dotenv';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+
 import routes from './routes/index.router';
 import './infra/database/mongo/index';
 import AppError from './errors/AppError';
+
+import swaggerFile from './swagger.json';
 
 dotenv.config({
   path: '.env',
@@ -34,6 +38,11 @@ class App {
   }
 
   private routes(): void {
+    this.server.use(
+      '/api/v1/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerFile),
+    );
     this.server.use('/api/v1', ...routes);
     this.server.use(
       (
