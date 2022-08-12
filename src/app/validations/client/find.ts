@@ -14,7 +14,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       city: Joi.string(),
       address: Joi.string(),
       number: Joi.number(),
-      complement: Joi.string().empty(true),
+      complement: Joi.string(),
       neighborhood: Joi.string(),
       page: Joi.number(),
       size: Joi.number(),
