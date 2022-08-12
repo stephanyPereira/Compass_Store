@@ -4,6 +4,10 @@
     "title": "Compass Store Documentation",
     "version": "1.0.0"
   },
+  "servers": [
+    {"url": "http://localhost:3333/api/v1"},
+    {"url": "http://localhost:3000/api/v1"}
+  ],
   "paths": {
     "/client": {
       "post": {
@@ -141,6 +145,186 @@
                   "details": [
                     {
                       "message": "Invalid CPF"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
+      }
+    },
+    "/client/{id}": {
+      "get": {
+        "tags": ["Client"],
+        "summary": "List client by ID",
+        "description": "List client by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "cpf": {
+                      "type": "string"
+                    },
+                    "birthday": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "cep": {
+                      "type": "string"
+                    },
+                    "uf": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "number"
+                    },
+                    "complement": {
+                      "type": "string"
+                    },
+                    "neighborhood": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "_id": "62f55a8ad82695b405d3bdb9",
+                  "name": "Maria da Silva",
+                  "cpf": "256.105.350-42",
+                  "birthday": "12/12/2000",
+                  "email": "mariasilva@hotmail.com",
+                  "cep": "01001-000",
+                  "uf": "SP",
+                  "city": "São Paulo",
+                  "address": "Praça da Sé",
+                  "number": 25,
+                  "complement": "lado ímpar",
+                  "neighborhood": "Sé"
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Client not found"
                     }
                   ]
                 }
