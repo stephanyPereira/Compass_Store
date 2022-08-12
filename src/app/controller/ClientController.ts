@@ -1,4 +1,3 @@
-import { IClient } from 'app/interfaces/IClient';
 import ClientService from '../service/ClientService';
 
 class ClientController {
