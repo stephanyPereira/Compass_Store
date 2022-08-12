@@ -365,6 +365,125 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": ["Client"],
+        "summary": "Remove the client through its Id",
+        "description": "Remove Client",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Client not found"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       }
     }
   }
