@@ -76,7 +76,11 @@ class ProductService {
     return this.findById(id);
   }
 
-  // async remove() {}
+  async remove(id: string): Promise<void> {
+    await this.validateProductId(id);
+
+    await ProductRepository.remove(id);
+  }
 
   async validateProductId(id: string): Promise<IProductResponse> {
     if (!ObjectId.isValidObjectId(id)) {

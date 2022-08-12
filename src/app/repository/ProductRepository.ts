@@ -54,7 +54,9 @@ class ProductRepository {
     );
   }
 
-  // async remove() {}
+  async remove(id: string): Promise<void> {
+    await ProductSchema.deleteOne({ _id: new Types.ObjectId(id) });
+  }
 
   filtersWithRegex({
     name,

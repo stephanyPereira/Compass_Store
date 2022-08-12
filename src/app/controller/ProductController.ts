@@ -29,7 +29,13 @@ class ProductController {
     return res.status(200).json(result);
   }
 
-  // async remove(req, res) {}
+  async remove(req, res) {
+    const { id } = req.params;
+
+    const result = await ProductService.remove(id);
+
+    return res.status(204).json(result);
+  }
 }
 
 export default new ProductController();
