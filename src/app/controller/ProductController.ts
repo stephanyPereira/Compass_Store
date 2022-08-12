@@ -9,7 +9,13 @@ class ProductController {
 
   // async find(req, res) {}
 
-  // async findById(req, res) {}
+  async findById(req, res) {
+    const { id } = req.params;
+
+    const result = await ProductService.findById(id);
+
+    return res.status(200).json(result);
+  }
 
   // async update(req, res) {}
 

@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/product', ProductController.create);
 // router.get('/product', ProductController.find);
-// router.get('/product/:id', ProductController.findById);
+router.get('/product/:id', ProductController.findById);
 // router.put('/product/:id', ProductController.update);
 // router.delete('/product/:id', ProductController.remove);
 
