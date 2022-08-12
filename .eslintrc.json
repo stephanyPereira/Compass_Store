@@ -56,7 +56,8 @@
           "trailingComma": "all",
           "arrowParens": "avoid"
         }],
-       "no-underscore-dangle": "off"
+       "no-underscore-dangle": "off",
+       "no-plusplus": "off"
     },
     "settings": {
         "import/resolver": {
