@@ -909,6 +909,25 @@
           }
         }
       }
-    }
+    },
+    "/product": {
+      "post": {
+        "tags": ["Product"]
+      },
+      "get": {
+        "tags": ["Product"]
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "tags": ["Product"]
+      },
+      "put": {
+        "tags": ["Product"]
+      },
+      "delete": {
+          "tags": ["Product"]   
+      }
+    } 
   }
 }
