@@ -1,7 +1,7 @@
 import { isAfter, isValid } from 'date-fns';
 import AppError from '../errors/AppError';
 
-export default function validateDate(birthday): Date {
+export default function validateDate(birthday: string): Date {
   const day = birthday.split('/')[0];
   const month = birthday.split('/')[1];
   const year = birthday.split('/')[2];

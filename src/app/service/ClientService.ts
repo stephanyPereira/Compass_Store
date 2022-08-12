@@ -71,20 +71,13 @@ class ClientService {
   }
 
   async findById(id: string): Promise<IClientResponse> {
-    if (!ObjectId.isValidObjectId(id)) {
-      throw new AppError('Id entered is not valid');
-    }
-    const client = await ClientRepository.findById(id);
-
-    if (client.length === 0) {
-      throw new AppError('Client not found', 404, 'Not Found');
-    }
+    const client = await this.validateIDClient(id);
 
     return {
-      ...client[0],
-      birthday: format(new Date(client[0].birthday), 'dd/MM/yyyy'),
-      cep: formatCEP(client[0].cep),
-      cpf: formatCPF(client[0].cpf),
+      ...client,
+      birthday: format(new Date(client.birthday), 'dd/MM/yyyy'),
+      cep: formatCEP(client.cep),
+      cpf: formatCPF(client.cpf),
     };
   }
 
@@ -92,7 +85,7 @@ class ClientService {
     id: string,
     { name, birthday, password, cep, number }: IClientUpdate,
   ): Promise<IClientResponse> {
-    await this.findById(id);
+    await this.validateIDClient(id);
 
     const client: any = {};
     if (name) {
@@ -132,6 +125,12 @@ class ClientService {
   }
 
   async remove(id: string): Promise<void> {
+    await this.validateIDClient(id);
+
+    await ClientRepository.remove(id);
+  }
+
+  async validateIDClient(id: string): Promise<IClientResponse> {
     if (!ObjectId.isValidObjectId(id)) {
       throw new AppError('Id entered is not valid');
     }
@@ -141,7 +140,7 @@ class ClientService {
       throw new AppError('Client not found', 404, 'Not Found');
     }
 
-    await ClientRepository.remove(id);
+    return client[0];
   }
 }
 
