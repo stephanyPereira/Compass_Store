@@ -21,6 +21,4 @@ schema.plugin(mongoosePaginate);
 
 const User = mongoose.model<IClient, PaginateModel<IClient>>('Client', schema);
 
-User.paginate();
-
 export default User;
