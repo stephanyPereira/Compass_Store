@@ -9,7 +9,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       category: Joi.string(),
       currency: Joi.string(),
       price: Joi.number(),
-    });
+    }).min(1);
 
     const { error } = await schema.validate(req.body, { abortEarly: true });
     if (error) throw error;
