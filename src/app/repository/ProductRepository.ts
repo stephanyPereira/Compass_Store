@@ -1,5 +1,9 @@
-import { Types } from 'mongoose';
-import { IProduct, IProductResponse } from '../interfaces/IProduct';
+import { PaginateResult, Types } from 'mongoose';
+import {
+  IProduct,
+  IProductFilters,
+  IProductResponse,
+} from '../interfaces/IProduct';
 
 import ProductSchema from '../schema/ProductSchema';
 
@@ -8,7 +12,26 @@ class ProductRepository {
     return ProductSchema.create(payload);
   }
 
-  // async find() {}
+  async find(
+    payload: IProductFilters,
+  ): Promise<PaginateResult<IProductResponse>> {
+    const filter = this.filtersWithRegex(payload);
+
+    const options = {
+      select: {
+        _id: '$_id',
+        name: '$name',
+        category: '$category',
+        currency: '$currency',
+        price: '$price',
+      },
+
+      page: payload.page,
+      limit: payload.size,
+    };
+
+    return ProductSchema.paginate(filter, options);
+  }
 
   async findById(id: string): Promise<IProductResponse[]> {
     return ProductSchema.aggregate()
@@ -27,6 +50,38 @@ class ProductRepository {
   // async update() {}
 
   // async remove() {}
+
+  filtersWithRegex({
+    name,
+    category,
+    currency,
+    minPrice,
+    maxPrice,
+  }: IProductFilters): Promise<any> {
+    const filter: any = {};
+
+    if (name) {
+      filter.name = { $regex: name, $options: 'i' };
+    }
+
+    if (category) {
+      filter.category = { $regex: category, $options: 'i' };
+    }
+
+    if (currency) {
+      filter.currency = { $regex: currency, $options: 'i' };
+    }
+
+    if (minPrice && maxPrice) {
+      filter.price = { $gte: minPrice, $lte: maxPrice };
+    } else if (minPrice) {
+      filter.price = { $gte: minPrice };
+    } else if (maxPrice) {
+      filter.price = { $lte: maxPrice };
+    }
+
+    return filter;
+  }
 }
 
 export default new ProductRepository();

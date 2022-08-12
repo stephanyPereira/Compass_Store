@@ -1,6 +1,11 @@
 import ObjectId from 'mongoose';
 import AppError from '../../errors/AppError';
-import { IProduct, IProductResponse } from '../interfaces/IProduct';
+import {
+  IProduct,
+  IProductFilters,
+  IProductResponse,
+  IProductResponsePageable,
+} from '../interfaces/IProduct';
 import ProductRepository from '../repository/ProductRepository';
 
 class ProductService {
@@ -14,7 +19,23 @@ class ProductService {
     return this.findById(result._id.toString());
   }
 
-  // async find() {}
+  async find(payload: IProductFilters): Promise<IProductResponsePageable> {
+    const result = await ProductRepository.find({
+      ...payload,
+      minPrice: +payload.minPrice,
+      maxPrice: +payload.maxPrice,
+      page: payload.page ? +payload.page : 1,
+      size: payload.size ? +payload.size : 10,
+    });
+
+    return {
+      products: result.docs,
+      currentPage: result.page,
+      pageSize: result.limit,
+      totalCount: result.totalDocs,
+      totalPages: result.totalPages,
+    };
+  }
 
   async findById(id: string): Promise<IProductResponse> {
     return this.validateProductId(id);

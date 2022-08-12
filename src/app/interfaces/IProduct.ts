@@ -14,3 +14,21 @@ export interface IProductResponse {
   currency: string;
   price: number;
 }
+
+export interface IProductResponsePageable {
+  products: IProductResponse[];
+  currentPage: number | undefined;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export interface IProductFilters {
+  name: string;
+  category: string;
+  currency: string;
+  minPrice: number;
+  maxPrice: number;
+  page: number;
+  size: number;
+}
