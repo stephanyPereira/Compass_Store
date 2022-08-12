@@ -35,6 +35,10 @@ class ClientRepository {
   async findByCPF(cpf: string): Promise<IClient[]> {
     return ClientSchema.find({ cpf });
   }
+
+  async remove(id: string): Promise<void> {
+    await ClientSchema.deleteOne({ _id: new Types.ObjectId(id) });
+  }
 }
 
 export default new ClientRepository();

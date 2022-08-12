@@ -99,6 +99,19 @@ class ClientService {
       cpf: formatCPF(client[0].cpf),
     };
   }
+
+  async remove(id: string): Promise<void> {
+    if (!ObjectId.isValidObjectId(id)) {
+      throw new AppError('Id entered is not valid');
+    }
+    const client = await ClientRepository.findById(id);
+
+    if (client.length === 0) {
+      throw new AppError('Client not found', 404, 'Not Found');
+    }
+
+    await ClientRepository.remove(id);
+  }
 }
 
 export default new ClientService();
