@@ -15,6 +15,7 @@
         "summary": "Create a client",
         "description": "Create a new client",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -261,6 +262,214 @@
                   "number": 25,
                   "complement": "lado ímpar",
                   "neighborhood": "Sé"
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Client not found"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Client"],
+        "summary": "Edit the client through its Id",
+        "description": "Edit Client",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],    
+        "requestBody": {
+          "content": {
+            "application/json": {    
+              "schema": {
+                "type": "object",
+                "minimum": 1,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "birthday": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "cep": {
+                    "type": "string"
+                  },
+                  "number": {
+                    "type": "number"
+                  }
+                },
+                "example": {
+                  "cep": "91215-075"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {        
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "cpf": {
+                      "type": "string"
+                    },
+                    "birthday": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "cep": {
+                      "type": "string"
+                    },
+                    "uf": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "number"
+                    },
+                    "complement": {
+                      "type": "string"
+                    },
+                    "neighborhood": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "_id": "62f55a8ad82695b405d3bdb9",
+                  "name": "Maria da Silva",
+                  "cpf": "256.105.350-42",
+                  "birthday": "12/12/2000",
+                  "email": "mariasilva@hotmail.com",
+                  "cep": "91215-095",
+                  "uf": "RS",
+                  "city": "Porto Alegre",
+                  "address": "Rua Luiz Fontoura Júnior",
+                  "number": 25,
+                  "complement": "",
+                  "neighborhood": "Jardim Itu"
                 }
               } 
             }
