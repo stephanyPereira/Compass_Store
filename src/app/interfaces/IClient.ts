@@ -30,6 +30,14 @@ export interface IClientResponse {
   _id: Types.ObjectId;
 }
 
+export interface IClientResponsePageable {
+  clients: IClientResponse[];
+  currentPage: number | undefined;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
+
 export interface IClientBody {
   name: string;
   cpf: string;

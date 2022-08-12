@@ -15,6 +15,7 @@ import {
   IClientBody,
   IClientFilters,
   IClientResponse,
+  IClientResponsePageable,
   IClientUpdate,
 } from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
@@ -71,7 +72,7 @@ class ClientService {
     return this.findById(result._id.toString());
   }
 
-  async find(filters: IClientFilters) {
+  async find(filters: IClientFilters): Promise<IClientResponsePageable> {
     const result = await ClientRepository.find({
       ...filters,
       cpf: filters.cpf ? filters.cpf.replace(/\D/g, '') : filters.cpf,
