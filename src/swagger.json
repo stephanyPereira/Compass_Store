@@ -186,6 +186,221 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": ["Client"],
+        "summary": "Lists paginated clients and by applied filter",
+        "description": "List paginated clients",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema":{
+              "type": "number",
+              "example": 1
+            },
+            "description": "Choose the page you want to see"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema":{
+              "type": "number",
+              "example": 10
+            },
+            "description": "Choose the number of records per page"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema":{
+              "type": "string",
+              "example": "silva"
+            },
+            "description": "Search by name or part of it"
+          },
+          {
+            "in": "query",
+            "name": "cpf",
+            "schema":{
+              "type": "string",
+              "example": "256.105.350-42"
+            },
+            "description": "Search by cpf or part of it. Can be shipped with mask"
+          },
+          {
+            "in": "query",
+            "name": "birthday",
+            "schema":{
+              "type": "string",
+              "example": "12/12/2000"
+            },
+            "description": "Search by birthday"
+          },  
+          {
+            "in": "query",
+            "name": "email",
+            "schema":{
+              "type": "string",
+              "example": "silva@"
+            },
+            "description": "Search by email or part of it"
+          },      
+          {
+            "in": "query",
+            "name": "cep",
+            "schema":{
+              "type": "string",
+              "example": "01001000"
+            },
+            "description": "Search by cep or part of it. Can be shipped with mask"
+          },
+          {
+            "in": "query",
+            "name": "uf",
+            "schema":{
+              "type": "string",
+              "example": "SP"
+            },
+            "description": "Search by uf or part of it"
+          },
+          {
+            "in": "query",
+            "name": "city",
+            "schema":{
+              "type": "string",
+              "example": "São"
+            },
+            "description": "Search by city or part of it"
+          },
+          {
+            "in": "query",
+            "name": "address",
+            "schema":{
+              "type": "string",
+              "example": "Praça da Sé"
+            },
+            "description": "Search by address or part of it"
+          },
+          {
+            "in": "query",
+            "name": "number",
+            "schema":{
+              "type": "number",
+              "example": 25
+            },
+            "description": "Search by number"
+          },
+          {
+            "in": "query",
+            "name": "complement",
+            "schema":{
+              "type": "string",
+              "example": "lado ímpar"
+            },
+            "description": "Search by address or part of it"
+          },
+          {
+            "in": "query",
+            "name": "neighborhood",
+            "schema":{
+              "type": "string",
+              "example": "Sé"
+            },
+            "description": "Search by neighborhood or part of it"
+          }
+        ], 
+        "responses": {
+          "200": {        
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "clients": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "cpf": {
+                            "type": "string"
+                          },
+                          "birthday": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "cep": {
+                            "type": "string"
+                          },
+                          "uf": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "address": {
+                            "type": "string"
+                          },
+                          "number": {
+                            "type": "number"
+                          },
+                          "complement": {
+                            "type": "string"
+                          },
+                          "neighborhood": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    },
+                    "currentPage": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "example": {
+                  "clients": [
+                    {
+                      "_id": "62f68665c2fb223c3f8ab9f0",
+                      "name": "Maria da Silva",
+                      "cpf": "256.105.350-42",
+                      "birthday": "12/12/2000",
+                      "email": "mariasilva@hotmail.com",
+                      "cep": "01001-000",
+                      "uf": "SP",
+                      "city": "São Paulo",
+                      "address": "Praça da Sé",
+                      "number": 25,
+                      "complement": "lado ímpar",
+                      "neighborhood": "Sé"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "pageSize": 10,
+                  "totalCount": 1,
+                  "totalPages": 1
+                }
+              } 
+            }
+          }
+        }
       }
     },
     "/client/{id}": {
