@@ -399,6 +399,39 @@
                 }
               } 
             }
+          },      
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "No data found for your search"
+                    }
+                  ]
+                }
+              } 
+            }
           }
         }
       }
@@ -1049,7 +1082,170 @@
         }
       },
       "get": {
-        "tags": ["Product"]
+        "tags": ["Product"],    
+        "summary": "Lists paginated products and by applied filter",
+        "description": "List paginated products",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema":{
+              "type": "number",
+              "example": 1
+            },
+            "description": "Choose the page you want to see"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema":{
+              "type": "number",
+              "example": 10
+            },
+            "description": "Choose the number of records per page"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema":{
+              "type": "string",
+              "example": "flor"
+            },
+            "description": "Search by name or part of it"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema":{
+              "type": "string",
+              "example": "Jard"
+            },
+            "description": "Search by category or part of it"
+          },
+          {
+            "in": "query",
+            "name": "currency",
+            "schema":{
+              "type": "string",
+              "example": "USD"
+            },
+            "description": "Search by currency or part of it"
+          },  
+          {
+            "in": "query",
+            "name": "minPrice",
+            "schema":{
+              "type": "number",
+              "example": 1
+            },
+            "description": "Search by minPrice"
+          },      
+          {
+            "in": "query",
+            "name": "maxPrice",
+            "schema":{
+              "type": "number",
+              "example": 13.78
+            },
+            "description": "Search by maxPrice"
+          }
+        ], 
+        "responses": {
+          "200": {        
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "_id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "currency": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "number"
+                          }
+                        }                        
+                      }
+                    },
+                    "currentPage": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "example": {
+                  "products": [
+                    {
+                      "_id": "62f6ab38d79a8e8a6bd252fa",
+                      "name": "Vaso de flor",
+                      "category": "Jardinagem",
+                      "currency": "USD",
+                      "price": 12.36
+                    }
+                  ],
+                  "currentPage": 1,
+                  "pageSize": 10,
+                  "totalCount": 1,
+                  "totalPages": 1
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "No data found for your search"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       }
     },
     "/product/{id}": {
