@@ -84,6 +84,10 @@ class ClientService {
       size: filters.size ? +filters.size : 10,
     });
 
+    if (result.docs.length === 0) {
+      throw new AppError('No data found for your search');
+    }
+
     const clients: IClientResponse[] = [];
 
     for (let i = 0; i < result.docs.length; i++) {

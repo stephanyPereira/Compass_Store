@@ -28,6 +28,10 @@ class ProductService {
       size: payload.size ? +payload.size : 10,
     });
 
+    if (result.docs.length === 0) {
+      throw new AppError('No data found for your search');
+    }
+
     return {
       products: result.docs,
       currentPage: result.page,
