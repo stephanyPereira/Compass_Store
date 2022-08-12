@@ -1,3 +1,4 @@
+import { IClient } from 'app/interfaces/IClient';
 import ClientService from '../service/ClientService';
 
 class ClientController {
@@ -13,6 +14,12 @@ class ClientController {
       number,
     });
     return res.status(201).json(result);
+  }
+
+  async find(req, res) {
+    const result = await ClientService.find(req.query);
+
+    return res.status(200).json(result);
   }
 
   async findById(req, res) {

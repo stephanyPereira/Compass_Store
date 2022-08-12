@@ -13,6 +13,7 @@ import validateDate from '../../utils/ValidateDate';
 import AppError from '../../errors/AppError';
 import {
   IClientBody,
+  IClientFilters,
   IClientResponse,
   IClientUpdate,
 } from '../interfaces/IClient';
@@ -68,6 +69,46 @@ class ClientService {
     });
 
     return this.findById(result._id.toString());
+  }
+
+  async find(filters: IClientFilters) {
+    const result = await ClientRepository.find({
+      ...filters,
+      cpf: filters.cpf ? filters.cpf.replace(/\D/g, '') : filters.cpf,
+      birthday: filters.birthday
+        ? validateDate(filters.birthday.toString())
+        : filters.birthday,
+      cep: filters.cep ? filters.cep.replace(/\D/g, '') : filters.cep,
+      page: filters.page ? +filters.page : 1,
+      size: filters.size ? +filters.size : 10,
+    });
+
+    const clients: IClientResponse[] = [];
+
+    for (let i = 0; i < result.docs.length; i++) {
+      clients.push({
+        _id: result.docs[i]._id,
+        name: result.docs[i].name,
+        cpf: formatCPF(result.docs[i].cpf),
+        birthday: format(new Date(result.docs[i].birthday), 'dd/MM/yyyy'),
+        email: result.docs[i].email,
+        cep: formatCEP(result.docs[i].cep),
+        uf: result.docs[i].uf,
+        city: result.docs[i].city,
+        address: result.docs[i].address,
+        number: result.docs[i].number,
+        complement: result.docs[i].complement,
+        neighborhood: result.docs[i].neighborhood,
+      });
+    }
+
+    return {
+      clients,
+      currentPage: result.page,
+      pageSize: result.limit,
+      totalCount: result.totalDocs,
+      totalPages: result.totalPages,
+    };
   }
 
   async findById(id: string): Promise<IClientResponse> {

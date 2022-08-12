@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { PaginateModel, Schema } from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import { IClient } from '../interfaces/IClient';
 
 const schema = new Schema<IClient>({
@@ -16,6 +17,10 @@ const schema = new Schema<IClient>({
   neighborhood: { type: String, required: true },
 });
 
-const User = mongoose.model<IClient>('Client', schema);
+schema.plugin(mongoosePaginate);
+
+const User = mongoose.model<IClient, PaginateModel<IClient>>('Client', schema);
+
+User.paginate();
 
 export default User;
