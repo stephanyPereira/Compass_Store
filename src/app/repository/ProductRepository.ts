@@ -47,7 +47,12 @@ class ProductRepository {
       });
   }
 
-  // async update() {}
+  async update(id: string, payload: IProduct): Promise<void> {
+    await ProductSchema.findOneAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      payload,
+    );
+  }
 
   // async remove() {}
 

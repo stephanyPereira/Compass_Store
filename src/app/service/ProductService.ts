@@ -45,7 +45,36 @@ class ProductService {
     return this.validateProductId(id);
   }
 
-  // async update() {}
+  async update(
+    id: string,
+    { name, category, currency, price }: IProduct,
+  ): Promise<IProductResponse> {
+    await this.validateProductId(id);
+
+    const product: any = {};
+
+    if (name) {
+      product.name = name;
+    }
+    if (category) {
+      product.category = category;
+    }
+
+    if (currency) {
+      product.currency = currency;
+    }
+
+    if (price) {
+      if (price <= 0) {
+        throw new AppError('Reported price is less than or equal to zero');
+      }
+      product.price = price;
+    }
+
+    await ProductRepository.update(id, product);
+
+    return this.findById(id);
+  }
 
   // async remove() {}
 
