@@ -23,6 +23,14 @@ class ClientController {
     return res.status(200).json(result);
   }
 
+  async update(req, res) {
+    const { id } = req.params;
+
+    const result = await ClientService.update(id, req.body);
+
+    return res.status(200).json(result);
+  }
+
   async remove(req, res) {
     const { id } = req.params;
 

@@ -7,10 +7,15 @@ import {
 import ObjectId from 'mongoose';
 import axios from 'axios';
 import { hash } from 'bcryptjs';
-import { format, isAfter, isValid } from 'date-fns';
+import { format } from 'date-fns';
 
+import validateDate from '../../utils/ValidateDate';
 import AppError from '../../errors/AppError';
-import { IClientBody, IClientResponse } from '../interfaces/IClient';
+import {
+  IClientBody,
+  IClientResponse,
+  IClientUpdate,
+} from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
 
 class ClientService {
@@ -36,29 +41,12 @@ class ClientService {
       throw new AppError('Email or CPF already in use!');
     }
 
-    const day = birthday.split('/')[0];
-    const month = birthday.split('/')[1];
-    const year = birthday.split('/')[2];
-
-    const date = new Date(
-      `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(
-        -2,
-      )}T00:00:00.003-03:00`,
-    );
-
-    if (!isValid(date)) {
-      throw new AppError('Invalid Date');
-    }
-
-    if (isAfter(date, Date.now())) {
-      throw new AppError('The given date is in the future');
-    }
+    const date = validateDate(birthday);
+    const passwordHash = await hash(password, 8);
 
     if (!isValidCEP(cep)) {
       throw new AppError('Invalid CEP');
     }
-
-    const passwordHash = await hash(password, 8);
 
     const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
@@ -98,6 +86,49 @@ class ClientService {
       cep: formatCEP(client[0].cep),
       cpf: formatCPF(client[0].cpf),
     };
+  }
+
+  async update(
+    id: string,
+    { name, birthday, password, cep, number }: IClientUpdate,
+  ): Promise<IClientResponse> {
+    await this.findById(id);
+
+    const client: any = {};
+    if (name) {
+      client.name = name;
+    }
+    if (birthday) {
+      client.birthday = validateDate(birthday);
+    }
+
+    if (password) {
+      client.password = await hash(password, 8);
+    }
+
+    if (cep) {
+      if (!isValidCEP(cep)) {
+        throw new AppError('Invalid CEP');
+      }
+
+      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+
+      client.cep = cep.replace(/\D/g, '');
+
+      client.uf = data.uf;
+      client.city = data.localidade;
+      client.address = data.logradouro;
+      client.complement = data.complemento;
+      client.neighborhood = data.bairro;
+    }
+
+    if (number) {
+      client.number = number;
+    }
+
+    await ClientRepository.update(id, client);
+
+    return this.findById(id);
   }
 
   async remove(id: string): Promise<void> {

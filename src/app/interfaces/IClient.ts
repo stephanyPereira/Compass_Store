@@ -39,3 +39,11 @@ export interface IClientBody {
   cep: string;
   number: number;
 }
+
+export interface IClientUpdate {
+  name?: string;
+  birthday?: string;
+  password?: string;
+  cep?: string;
+  number?: number;
+}

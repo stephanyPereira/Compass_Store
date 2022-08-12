@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { IClient, IClientResponse } from '../interfaces/IClient';
+import { IClient, IClientResponse, IClientUpdate } from '../interfaces/IClient';
 import ClientSchema from '../schema/ClientSchema';
 
 class ClientRepository {
@@ -34,6 +34,13 @@ class ClientRepository {
 
   async findByCPF(cpf: string): Promise<IClient[]> {
     return ClientSchema.find({ cpf });
+  }
+
+  async update(id: string, update: IClientUpdate): Promise<void> {
+    await ClientSchema.findOneAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      update,
+    );
   }
 
   async remove(id: string): Promise<void> {
