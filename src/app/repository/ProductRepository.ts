@@ -1,5 +1,6 @@
 import { PaginateResult, Types } from 'mongoose';
-import { IFiltersProductRepository } from '../interfaces/IFilters';
+import filterData from '../../utils/FilterData';
+import { IFilter } from '../interfaces/IFilters';
 import {
   IProduct,
   IProductFilters,
@@ -14,10 +15,54 @@ class ProductRepository {
     return ProductSchema.create(payload);
   }
 
-  async find(
-    payload: IProductFilters,
-  ): Promise<PaginateResult<IProductResponse>> {
-    const filter = this.filtersWithRegex(payload);
+  async find({
+    name,
+    category,
+    currency,
+    minPrice,
+    maxPrice,
+    page,
+    size,
+  }: IProductFilters): Promise<PaginateResult<IProductResponse>> {
+    const parsedFilters: IFilter[] = [
+      {
+        field: 'name',
+        value: name,
+        regex: { $regex: name, $options: 'i' },
+      },
+      {
+        field: 'category',
+        value: category,
+        regex: { $regex: category, $options: 'i' },
+      },
+      {
+        field: 'currency',
+        value: currency,
+        regex: { $regex: currency, $options: 'i' },
+      },
+    ];
+
+    if (minPrice && maxPrice) {
+      parsedFilters.push({
+        field: 'price',
+        value: minPrice,
+        regex: { $gte: minPrice, $lte: maxPrice },
+      });
+    } else if (minPrice) {
+      parsedFilters.push({
+        field: 'price',
+        value: minPrice,
+        regex: { $gte: minPrice },
+      });
+    } else if (maxPrice) {
+      parsedFilters.push({
+        field: 'price',
+        value: maxPrice,
+        regex: { $lte: maxPrice },
+      });
+    }
+
+    const filter = filterData(parsedFilters);
 
     const options = {
       select: {
@@ -27,9 +72,8 @@ class ProductRepository {
         currency: '$currency',
         price: '$price',
       },
-
-      page: payload.page,
-      limit: payload.size,
+      page,
+      limit: size,
     };
 
     return ProductSchema.paginate(filter, options);
@@ -58,38 +102,6 @@ class ProductRepository {
 
   async remove(id: string): Promise<void> {
     await ProductSchema.deleteOne({ _id: new Types.ObjectId(id) });
-  }
-
-  filtersWithRegex({
-    name,
-    category,
-    currency,
-    minPrice,
-    maxPrice,
-  }: IProductFilters): IFiltersProductRepository {
-    const filter: IFiltersProductRepository = {};
-
-    if (name) {
-      filter.name = { $regex: name, $options: 'i' };
-    }
-
-    if (category) {
-      filter.category = { $regex: category, $options: 'i' };
-    }
-
-    if (currency) {
-      filter.currency = { $regex: currency, $options: 'i' };
-    }
-
-    if (minPrice && maxPrice) {
-      filter.price = { $gte: minPrice, $lte: maxPrice };
-    } else if (minPrice) {
-      filter.price = { $gte: minPrice };
-    } else if (maxPrice) {
-      filter.price = { $lte: maxPrice };
-    }
-
-    return filter;
   }
 }
 

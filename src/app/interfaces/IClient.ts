@@ -50,9 +50,14 @@ export interface IClientBody {
 
 export interface IClientUpdate {
   name?: string;
-  birthday?: string;
+  birthday?: string | Date;
   password?: string;
   cep?: string;
+  uf?: string;
+  city?: string;
+  address?: string;
+  complement?: string;
+  neighborhood?: string;
   number?: number;
 }
 

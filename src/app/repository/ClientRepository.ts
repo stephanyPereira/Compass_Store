@@ -1,13 +1,12 @@
 import { PaginateResult, Types } from 'mongoose';
+import filterData from '../../utils/FilterData';
 import {
   IClient,
   IClientFilters,
   IClientResponse,
+  IClientUpdate,
 } from '../interfaces/IClient';
-import {
-  IFiltersClientRepository,
-  IFiltersClientService,
-} from '../interfaces/IFilters';
+import { IFilter } from '../interfaces/IFilters';
 import ClientSchema from '../schema/ClientSchema';
 
 class ClientRepository {
@@ -15,10 +14,80 @@ class ClientRepository {
     return ClientSchema.create(payload);
   }
 
-  async find(
-    filters: IClientFilters,
-  ): Promise<PaginateResult<IClientResponse>> {
-    const filter = this.filtersWithRegex(filters);
+  async find({
+    name,
+    cpf,
+    birthday,
+    email,
+    cep,
+    uf,
+    city,
+    address,
+    number,
+    complement,
+    neighborhood,
+    page,
+    size,
+  }: IClientFilters): Promise<PaginateResult<IClientResponse>> {
+    const parsedFilters: IFilter[] = [
+      {
+        field: 'name',
+        value: name,
+        regex: { $regex: name, $options: 'i' },
+      },
+      {
+        field: 'cpf',
+        value: cpf,
+        regex: { $regex: cpf, $options: 'i' },
+      },
+      {
+        field: 'birthday',
+        value: birthday,
+        regex: birthday,
+      },
+      {
+        field: 'email',
+        value: email,
+        regex: { $regex: email, $options: 'i' },
+      },
+      {
+        field: 'uf',
+        value: uf,
+        regex: { $regex: uf, $options: 'i' },
+      },
+      {
+        field: 'cep',
+        value: cep,
+        regex: { $regex: cep, $options: 'i' },
+      },
+      {
+        field: 'city',
+        value: city,
+        regex: { $regex: city, $options: 'i' },
+      },
+      {
+        field: 'address',
+        value: address,
+        regex: { $regex: address, $options: 'i' },
+      },
+      {
+        field: 'number',
+        value: number,
+        regex: number,
+      },
+      {
+        field: 'complement',
+        value: complement,
+        regex: { $regex: complement, $options: 'i' },
+      },
+      {
+        field: 'neighborhood',
+        value: neighborhood,
+        regex: { $regex: neighborhood, $options: 'i' },
+      },
+    ];
+
+    const filter = filterData(parsedFilters);
 
     const options = {
       select: {
@@ -35,8 +104,8 @@ class ClientRepository {
         complement: '$complement',
         neighborhood: '$neighborhood',
       },
-      page: filters.page,
-      limit: filters.size,
+      page,
+      limit: size,
     };
 
     return ClientSchema.paginate(filter, options);
@@ -71,7 +140,7 @@ class ClientRepository {
     return ClientSchema.find({ cpf });
   }
 
-  async update(id: string, update: IFiltersClientService): Promise<void> {
+  async update(id: string, update: IClientUpdate): Promise<void> {
     await ClientSchema.findOneAndUpdate(
       { _id: new Types.ObjectId(id) },
       update,
@@ -80,68 +149,6 @@ class ClientRepository {
 
   async remove(id: string): Promise<void> {
     await ClientSchema.deleteOne({ _id: new Types.ObjectId(id) });
-  }
-
-  filtersWithRegex({
-    name,
-    cpf,
-    birthday,
-    email,
-    cep,
-    uf,
-    city,
-    address,
-    number,
-    complement,
-    neighborhood,
-  }: IClientFilters): IFiltersClientRepository {
-    const filter: IFiltersClientRepository = {};
-
-    if (name) {
-      filter.name = { $regex: name, $options: 'i' };
-    }
-
-    if (cpf) {
-      filter.cpf = { $regex: cpf, $options: 'i' };
-    }
-
-    if (birthday) {
-      filter.birthday = birthday;
-    }
-
-    if (email) {
-      filter.email = { $regex: email, $options: 'i' };
-    }
-
-    if (uf) {
-      filter.uf = { $regex: uf, $options: 'i' };
-    }
-
-    if (cep) {
-      filter.cep = { $regex: cep, $options: 'i' };
-    }
-
-    if (city) {
-      filter.city = { $regex: city, $options: 'i' };
-    }
-
-    if (address) {
-      filter.address = { $regex: address, $options: 'i' };
-    }
-
-    if (number) {
-      filter.number = +number;
-    }
-
-    if (complement) {
-      filter.complement = { $regex: complement, $options: 'i' };
-    }
-
-    if (neighborhood) {
-      filter.neighborhood = { $regex: neighborhood, $options: 'i' };
-    }
-
-    return filter;
   }
 }
 

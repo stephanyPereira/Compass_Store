@@ -19,7 +19,6 @@ import {
   IClientUpdate,
 } from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
-import { IFiltersClientService } from '../interfaces/IFilters';
 
 class ClientService {
   async create({
@@ -75,12 +74,23 @@ class ClientService {
 
   async find(filters: IClientFilters): Promise<IClientResponsePageable> {
     const result = await ClientRepository.find({
-      ...filters,
-      cpf: filters.cpf ? filters.cpf.replace(/\D/g, '') : filters.cpf,
+      name: filters.name ? filters.name.trim() : filters.name,
+      cpf: filters.cpf ? filters.cpf.trim().replace(/\D/g, '') : filters.cpf,
       birthday: filters.birthday
         ? validateDate(filters.birthday.toString())
         : filters.birthday,
+      email: filters.email ? filters.email.trim() : filters.email,
       cep: filters.cep ? filters.cep.replace(/\D/g, '') : filters.cep,
+      uf: filters.uf ? filters.uf.trim() : filters.uf,
+      address: filters.address ? filters.address.trim() : filters.address,
+      city: filters.city ? filters.city.trim() : filters.city,
+      neighborhood: filters.neighborhood
+        ? filters.neighborhood.trim()
+        : filters.neighborhood,
+      complement: filters.complement
+        ? filters.complement.trim()
+        : filters.complement,
+      number: filters.number ? +filters.number : filters.number,
       page: filters.page ? +filters.page : 1,
       size: filters.size ? +filters.size : 10,
     });
@@ -134,12 +144,12 @@ class ClientService {
   ): Promise<IClientResponse> {
     await this.validateIDClient(id);
 
-    const client: IFiltersClientService = {};
+    const client: IClientUpdate = {};
     if (name) {
       client.name = name;
     }
     if (birthday) {
-      client.birthday = validateDate(birthday);
+      client.birthday = validateDate(birthday.toString());
     }
 
     if (password) {
@@ -177,7 +187,7 @@ class ClientService {
     await ClientRepository.remove(id);
   }
 
-  async validateIDClient(id: string): Promise<IClientResponse> {
+  private async validateIDClient(id: string): Promise<IClientResponse> {
     if (!ObjectId.isValidObjectId(id)) {
       throw new AppError('Id entered is not valid');
     }

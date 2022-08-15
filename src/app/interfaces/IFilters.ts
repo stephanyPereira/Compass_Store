@@ -1,35 +1,18 @@
 export interface IFiltersRegex {
-  $regex: string;
-  $options: string;
+  $regex?: string | undefined;
+  $options?: string;
+  $gte?: number;
+  $lte?: number;
 }
 
-export interface IFiltersClientRepository {
-  name?: IFiltersRegex;
-  cpf?: IFiltersRegex;
-  birthday?: string | Date;
-  email?: IFiltersRegex;
-  cep?: IFiltersRegex;
-  uf?: IFiltersRegex;
-  city?: IFiltersRegex;
-  address?: IFiltersRegex;
-  number?: number;
-  complement?: IFiltersRegex;
-  neighborhood?: IFiltersRegex;
+export interface IMatchData {
+  [key: string]: IFiltersRegex | Date | number | string;
 }
 
-export interface IFiltersClientService {
-  name?: string;
-  cpf?: IFiltersRegex;
-  birthday?: string | Date;
-  password?: string;
-  email?: string;
-  cep?: string;
-  uf?: string;
-  city?: string;
-  address?: string;
-  number?: number;
-  complement?: string;
-  neighborhood?: string;
+export interface IFilter {
+  field: string;
+  value: string | Date | number | undefined;
+  regex: IFiltersRegex | Date | number | string;
 }
 
 export interface IFiltersProductRepository {
