@@ -10,6 +10,6 @@ router.post('/sale', createValidation, SaleController.create);
 // router.get('/sale', SaleController.find);
 router.get('/sale/:id', SaleController.findById);
 router.put('/sale/:id', updateValidation, SaleController.update);
-// router.delete('/sale/:id', SaleController.delete);
+router.delete('/sale/:id', SaleController.delete);
 
 export default router;

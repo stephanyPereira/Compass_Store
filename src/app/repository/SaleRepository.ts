@@ -21,7 +21,9 @@ class SaleRepository {
     await SaleSchema.findOneAndUpdate({ _id: new Types.ObjectId(id) }, payload);
   }
 
-  // async delete(id: string): Promise<void> {}
+  async delete(id: string): Promise<void> {
+    await SaleSchema.findByIdAndDelete(id);
+  }
 }
 
 export default new SaleRepository();

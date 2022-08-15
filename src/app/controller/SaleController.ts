@@ -23,7 +23,13 @@ class SaleController {
 
     return res.status(200).json(result);
   }
-  // async delete(req, res) {}
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const result = await SaleService.remove(id);
+
+    return res.status(204).json(result);
+  }
 }
 
 export default new SaleController();

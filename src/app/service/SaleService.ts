@@ -142,7 +142,11 @@ class SaleService {
     return this.findById(id);
   }
 
-  // async remove(): Promise<any> {}
+  async remove(id: string): Promise<void> {
+    await this.validateIDSale(id);
+
+    await SaleRepository.delete(id);
+  }
 
   private async validateIDSale(id: string): Promise<ISaleResponse> {
     if (!ObjectId.isValidObjectId(id)) {
