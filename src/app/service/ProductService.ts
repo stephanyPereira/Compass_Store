@@ -84,7 +84,6 @@ class ProductService {
   }
 
   private async validateProductId(id: string): Promise<IProductResponse> {
-    console.log('qww', id);
     if (!ObjectId.isValidObjectId(id)) {
       throw new AppError('Id entered is not valid');
     }
