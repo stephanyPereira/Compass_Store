@@ -1695,6 +1695,25 @@
           }
         }
       }
-    } 
+    },
+    "/sale": {
+      "post": {
+        "tags": ["Sale"]
+      },
+      "get": {
+        "tags": ["Sale"]
+      }
+    },
+    "/sale/{id}": {
+      "get": {
+        "tags": ["Sale"]
+      },
+      "put": {
+        "tags": ["Sale"]
+      },
+      "delete": {
+        "tags": ["Sale"]
+      }
+    }
   }
 }
