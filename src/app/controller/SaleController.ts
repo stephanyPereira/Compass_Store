@@ -16,7 +16,13 @@ class SaleController {
     return res.status(200).json(result);
   }
 
-  // async update(req, res) {}
+  async update(req, res) {
+    const { id } = req.params;
+
+    const result = await SaleService.update(id, req.body);
+
+    return res.status(200).json(result);
+  }
   // async delete(req, res) {}
 }
 

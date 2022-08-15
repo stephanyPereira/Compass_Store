@@ -42,3 +42,10 @@ export interface ISaleResponse {
   total: number;
   totalClient?: string;
 }
+
+export interface ISaleUpdate {
+  clientCurrency?: string;
+  date?: Date;
+  items?: ISaleItems[];
+  total?: number;
+}

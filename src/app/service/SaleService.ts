@@ -4,7 +4,12 @@ import { format } from 'date-fns';
 import ObjectId from 'mongoose';
 import AppError from '../../errors/AppError';
 import validateDate from '../../utils/ValidateDate';
-import { ISale, ISaleItems, ISaleResponse } from '../interfaces/ISale';
+import {
+  ISale,
+  ISaleItems,
+  ISaleResponse,
+  ISaleUpdate,
+} from '../interfaces/ISale';
 import SaleRepository from '../repository/SaleRepository';
 import ClientService from './ClientService';
 import ProductService from './ProductService';
@@ -75,7 +80,68 @@ class SaleService {
     };
   }
 
-  // async update(): Promise<any> {}
+  async update(
+    id: string,
+    { clientCurrency, items }: ISaleUpdate,
+  ): Promise<ISaleResponse> {
+    await this.validateIDSale(id);
+
+    const sale: ISaleUpdate = {};
+    const products: ISaleItems[] = [];
+    let total = 0;
+
+    if (clientCurrency) {
+      sale.clientCurrency = clientCurrency;
+    }
+
+    if (items && items.length !== 0) {
+      const hasDuplicatedProducts: string[] = [];
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].product) {
+          const { price } = await ProductService.findById(
+            items[i].product.toString(),
+          );
+
+          if (items[i].qtd && items[i].qtd <= 0) {
+            throw new AppError(
+              `Value informed for qtd is less than or equal to zero in the product: ${items[i].product}`,
+            );
+          }
+          hasDuplicatedProducts.push(items[i].product.toString());
+
+          total += items[i].qtd * price;
+          products.push({
+            ...items[i],
+            unitValue: price,
+          });
+        }
+      }
+
+      if (products.length > 0) {
+        sale.items = products;
+      }
+
+      if (total !== 0) {
+        sale.total = total;
+      }
+
+      if (
+        new Set(hasDuplicatedProducts).size !== hasDuplicatedProducts.length
+      ) {
+        throw new AppError(
+          'Please double-check your shipped items. Because duplicate products were sent',
+        );
+      }
+    }
+
+    sale.date = new Date();
+
+    await SaleRepository.update(id, sale);
+
+    return this.findById(id);
+  }
+
   // async remove(): Promise<any> {}
 
   private async validateIDSale(id: string): Promise<ISaleResponse> {
