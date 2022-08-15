@@ -5,6 +5,7 @@ import {
   IProductFilters,
   IProductResponse,
   IProductResponsePageable,
+  IProductUpdate,
 } from '../interfaces/IProduct';
 import ProductRepository from '../repository/ProductRepository';
 
@@ -51,7 +52,7 @@ class ProductService {
   ): Promise<IProductResponse> {
     await this.validateProductId(id);
 
-    const product: any = {};
+    const product: IProductUpdate = {};
 
     if (name) {
       product.name = name;

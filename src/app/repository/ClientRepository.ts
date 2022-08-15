@@ -3,8 +3,11 @@ import {
   IClient,
   IClientFilters,
   IClientResponse,
-  IClientUpdate,
 } from '../interfaces/IClient';
+import {
+  IFiltersClientRepository,
+  IFiltersClientService,
+} from '../interfaces/IFilters';
 import ClientSchema from '../schema/ClientSchema';
 
 class ClientRepository {
@@ -68,7 +71,7 @@ class ClientRepository {
     return ClientSchema.find({ cpf });
   }
 
-  async update(id: string, update: IClientUpdate): Promise<void> {
+  async update(id: string, update: IFiltersClientService): Promise<void> {
     await ClientSchema.findOneAndUpdate(
       { _id: new Types.ObjectId(id) },
       update,
@@ -91,8 +94,8 @@ class ClientRepository {
     number,
     complement,
     neighborhood,
-  }: IClientFilters): Promise<any> {
-    const filter: any = {};
+  }: IClientFilters): IFiltersClientRepository {
+    const filter: IFiltersClientRepository = {};
 
     if (name) {
       filter.name = { $regex: name, $options: 'i' };

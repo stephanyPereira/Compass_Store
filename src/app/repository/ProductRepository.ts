@@ -1,8 +1,10 @@
 import { PaginateResult, Types } from 'mongoose';
+import { IFiltersProductRepository } from '../interfaces/IFilters';
 import {
   IProduct,
   IProductFilters,
   IProductResponse,
+  IProductUpdate,
 } from '../interfaces/IProduct';
 
 import ProductSchema from '../schema/ProductSchema';
@@ -47,7 +49,7 @@ class ProductRepository {
       });
   }
 
-  async update(id: string, payload: IProduct): Promise<void> {
+  async update(id: string, payload: IProductUpdate): Promise<void> {
     await ProductSchema.findOneAndUpdate(
       { _id: new Types.ObjectId(id) },
       payload,
@@ -64,8 +66,8 @@ class ProductRepository {
     currency,
     minPrice,
     maxPrice,
-  }: IProductFilters): Promise<any> {
-    const filter: any = {};
+  }: IProductFilters): IFiltersProductRepository {
+    const filter: IFiltersProductRepository = {};
 
     if (name) {
       filter.name = { $regex: name, $options: 'i' };

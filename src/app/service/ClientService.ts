@@ -19,6 +19,7 @@ import {
   IClientUpdate,
 } from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
+import { IFiltersClientService } from '../interfaces/IFilters';
 
 class ClientService {
   async create({
@@ -133,7 +134,7 @@ class ClientService {
   ): Promise<IClientResponse> {
     await this.validateIDClient(id);
 
-    const client: any = {};
+    const client: IFiltersClientService = {};
     if (name) {
       client.name = name;
     }

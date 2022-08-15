@@ -32,3 +32,10 @@ export interface IProductFilters {
   page: number;
   size: number;
 }
+
+export interface IProductUpdate {
+  name?: string;
+  category?: string;
+  currency?: string;
+  price?: number;
+}
