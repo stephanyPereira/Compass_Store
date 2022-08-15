@@ -1698,7 +1698,207 @@
     },
     "/sale": {
       "post": {
-        "tags": ["Sale"]
+        "tags": ["Sale"],
+        "summary": "Create a Sale",
+        "description": "Create a new sale",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client": {
+                    "type": "string"
+                  },
+                  "clientCurrency": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string"
+                  },
+                  "items": {  
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "product": {
+                          "type": "string"
+                        },
+                        "qtd": {
+                          "type": "number"
+                        }
+                      }                        
+                    }
+                  }
+                },
+                "example": {
+                  "client": "62f63ecff3b43b9f4089277e",
+                  "clientCurrency": "BRL",
+                  "date": "15/08/2022",
+                  "items": [
+                    {
+                      "product": "62f6b0c937562e3f39b0176d",
+                      "qtd": 3
+                    }, 
+                    {			
+                      "product": "62fa58f52f1594144084becd",
+                      "qtd": 6
+                    },
+                    {
+                      "product": "62fa5d76530b9271c07fdd6c",
+                      "qtd": 4
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {  
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "client": {
+                      "type": "string"
+                    },
+                    "clientCurrency": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string"
+                    },   
+                    "items": {  
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "product": {
+                            "type": "string"
+                          },
+                          "qtd": {
+                            "type": "number"
+                          },
+                          "unitValue": {
+                            "type": "number"
+                          },
+                          "_id": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "totalClient": {
+                      "type": "string"
+                    } 
+                  }
+                },
+                "example": {
+                  "_id": "62fa9cdde7c53b0b8a9ffdb5",
+                  "client": "62f63ecff3b43b9f4089277e",
+                  "clientCurrency": "BRL",
+                  "date": "15/08/2022",
+                  "items": [
+                    {
+                      "product": "62f6b0c937562e3f39b0176d",
+                      "qtd": 3,
+                      "unitValue": 25.5,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb6"
+                    },
+                    {
+                      "product": "62fa58f52f1594144084becd",
+                      "qtd": 6,
+                      "unitValue": 10,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb7"
+                    },
+                    {
+                      "product": "62fa5d76530b9271c07fdd6c",
+                      "qtd": 4,
+                      "unitValue": 12.36,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb8"
+                    }
+                  ],
+                  "total": 185.94,
+                  "totalClient": "947,75"
+                }
+              } 
+            }
+          },  
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Value informed for qtd is less than or equal to zero in the product: 62f6b0c937562e3f39b0176d"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       },
       "get": {
         "tags": ["Sale"]
@@ -1706,7 +1906,197 @@
     },
     "/sale/{id}": {
       "get": {
-        "tags": ["Sale"]
+        "tags": ["Sale"],
+        "summary": "List sale by ID",
+        "description": "List sale by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {  
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "client": {
+                      "type": "string"
+                    },
+                    "clientCurrency": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string"
+                    },   
+                    "items": {  
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "product": {
+                            "type": "string"
+                          },
+                          "qtd": {
+                            "type": "number"
+                          },
+                          "unitValue": {
+                            "type": "number"
+                          },
+                          "_id": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "totalClient": {
+                      "type": "string"
+                    } 
+                  }
+                },
+                "example": {
+                  "_id": "62fa9cdde7c53b0b8a9ffdb5",
+                  "client": "62f63ecff3b43b9f4089277e",
+                  "clientCurrency": "BRL",
+                  "date": "15/08/2022",
+                  "items": [
+                    {
+                      "product": "62f6b0c937562e3f39b0176d",
+                      "qtd": 3,
+                      "unitValue": 25.5,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb6"
+                    },
+                    {
+                      "product": "62fa58f52f1594144084becd",
+                      "qtd": 6,
+                      "unitValue": 10,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb7"
+                    },
+                    {
+                      "product": "62fa5d76530b9271c07fdd6c",
+                      "qtd": 4,
+                      "unitValue": 12.36,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb8"
+                    }
+                  ],
+                  "total": 185.94,
+                  "totalClient": "946,83"
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Sale not found"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       },
       "put": {
         "tags": ["Sale"]
