@@ -57,7 +57,8 @@
           "arrowParens": "avoid"
         }],
        "no-underscore-dangle": "off",
-       "no-plusplus": "off"
+       "no-plusplus": "off",
+       "no-await-in-loop": "off"
     },
     "settings": {
         "import/resolver": {
