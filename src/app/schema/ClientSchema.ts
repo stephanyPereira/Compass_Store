@@ -19,6 +19,9 @@ const schema = new Schema<IClient>({
 
 schema.plugin(mongoosePaginate);
 
-const User = mongoose.model<IClient, PaginateModel<IClient>>('Client', schema);
+const Client = mongoose.model<IClient, PaginateModel<IClient>>(
+  'Client',
+  schema,
+);
 
-export default User;
+export default Client;

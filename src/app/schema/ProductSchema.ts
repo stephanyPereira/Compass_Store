@@ -11,9 +11,9 @@ const schema = new Schema<IProduct>({
 
 schema.plugin(mongoosePaginate);
 
-const User = mongoose.model<IProduct, PaginateModel<IProduct>>(
+const Product = mongoose.model<IProduct, PaginateModel<IProduct>>(
   'Product',
   schema,
 );
 
-export default User;
+export default Product;
