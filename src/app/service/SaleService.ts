@@ -88,7 +88,7 @@ class SaleService {
         _id: sale.docs[i]._id,
         client: sale.docs[i].client,
         clientCurrency: sale.docs[i].clientCurrency,
-        date: sale.docs[i].date,
+        date: format(new Date(sale.docs[i].date), 'dd/MM/yyyy'),
         items: sale.docs[i].items,
         total: sale.docs[i].total,
         totalClient: formatCurrency(data[0].ask * sale.docs[i].total, {

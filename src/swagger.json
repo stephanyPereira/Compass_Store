@@ -1901,7 +1901,222 @@
         }
       },
       "get": {
-        "tags": ["Sale"]
+        "tags": ["Sale"],
+        "summary": "Lists paginated sales and by applied filter",
+        "description": "List paginated sales",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema":{
+              "type": "number",
+              "example": 1
+            },
+            "description": "Choose the page you want to see"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "schema":{
+              "type": "number",
+              "example": 10
+            },
+            "description": "Choose the number of records per page"
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "schema":{
+              "type": "string",
+              "example": "62f63ecff3b43b9f4089277e"
+            },
+            "description": "Search by client"
+          },
+          {
+            "in": "query",
+            "name": "clientCurrency",
+            "schema":{
+              "type": "string",
+              "example": "BRL"
+            },
+            "description": "Search by client Currency or part of it"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "schema":{
+              "type": "string",
+              "example": "15/08/2022"
+            },
+            "description": "Search by date"
+          },
+          {
+            "in": "query",
+            "name": "product",
+            "schema":{
+              "type": "string",
+              "example": "62f6b0c937562e3f39b0176d"
+            },
+            "description": "Search by product"
+          },  
+          {
+            "in": "query",
+            "name": "minTotal",
+            "schema":{
+              "type": "number",
+              "example": 48
+            },
+            "description": "Search by minTotal"
+          },      
+          {
+            "in": "query",
+            "name": "maxTotal",
+            "schema":{
+              "type": "number",
+              "example": 100.50
+            },
+            "description": "Search by maxTotal"
+          }
+        ], 
+        "responses": {
+          "200": {        
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sales": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "_id": {
+                            "type": "string"
+                          },
+                          "client": {
+                            "type": "string"
+                          },
+                          "clientCurrency": {
+                            "type": "string"
+                          },
+                          "date": {
+                            "type": "string"
+                          },   
+                          "items": {  
+                            "type": "array",
+                            "items": {
+                              "properties": {
+                                "product": {
+                                  "type": "string"
+                                },
+                                "qtd": {
+                                  "type": "number"
+                                },
+                                "unitValue": {
+                                  "type": "number"
+                                },
+                                "_id": {
+                                  "type": "string"
+                                }
+                              }                        
+                            }
+                          },
+                          "total": {
+                            "type": "number"
+                          },
+                          "totalClient": {
+                            "type": "string"
+                          } 
+                        }                        
+                      }
+                    },
+                    "currentPage": {
+                      "type": "number"
+                    },
+                    "pageSize": {
+                      "type": "number"
+                    },
+                    "totalCount": {
+                      "type": "number"
+                    },
+                    "totalPages": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "example": {
+                  "sales": [
+                    {
+                      "_id": "62fa9cdde7c53b0b8a9ffdb5",
+                      "client": "62f63ecff3b43b9f4089277e",
+                      "clientCurrency": "BRL",
+                      "date": "15/08/2022",
+                      "items": [
+                        {
+                          "product": "62f6b0c937562e3f39b0176d",
+                          "qtd": 3,
+                          "unitValue": 25.5,
+                          "_id": "62fa9cdde7c53b0b8a9ffdb6"
+                        },
+                        {
+                          "product": "62fa58f52f1594144084becd",
+                          "qtd": 6,
+                          "unitValue": 10,
+                          "_id": "62fa9cdde7c53b0b8a9ffdb7"
+                        },
+                        {
+                          "product": "62fa5d76530b9271c07fdd6c",
+                          "qtd": 4,
+                          "unitValue": 12.36,
+                          "_id": "62fa9cdde7c53b0b8a9ffdb8"
+                        }
+                      ],
+                      "total": 185.94,
+                      "totalClient": "947,75"
+                    }
+                  ],
+                  "currentPage": 1,
+                  "pageSize": 10,
+                  "totalCount": 1,
+                  "totalPages": 1
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "No data found for your search"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       }
     },
     "/sale/{id}": {
@@ -2099,10 +2314,350 @@
         }
       },
       "put": {
-        "tags": ["Sale"]
+        "tags": ["Sale"], 
+        "summary": "Edit the sale through its Id",
+        "description": "Edit Sale",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],    
+        "requestBody": {
+          "content": {
+            "application/json": {    
+              "schema": {
+                "type": "object",
+                "minimum": 1,
+                "properties": {
+                  "clientCurrency": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "number"
+                  },
+                  "items": {  
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "product": {
+                          "type": "string"
+                        },
+                        "qtd": {
+                          "type": "number"
+                        }
+                      }                        
+                    }
+                  }
+                },
+                "example": {
+                  "clientCurrency": "EUR"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {        
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "client": {
+                      "type": "string"
+                    },
+                    "clientCurrency": {
+                      "type": "string"
+                    },
+                    "date": {
+                      "type": "string"
+                    },   
+                    "items": {  
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "product": {
+                            "type": "string"
+                          },
+                          "qtd": {
+                            "type": "number"
+                          },
+                          "unitValue": {
+                            "type": "number"
+                          },
+                          "_id": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "totalClient": {
+                      "type": "string"
+                    } 
+                  }
+                },
+                "example": {
+                  "_id": "62fa9cdde7c53b0b8a9ffdb5",
+                  "client": "62f63ecff3b43b9f4089277e",
+                  "clientCurrency": "EUR",
+                  "date": "15/08/2022",
+                  "items": [
+                    {
+                      "product": "62f6b0c937562e3f39b0176d",
+                      "qtd": 3,
+                      "unitValue": 25.5,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb6"
+                    },
+                    {
+                      "product": "62fa58f52f1594144084becd",
+                      "qtd": 6,
+                      "unitValue": 10,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb7"
+                    },
+                    {
+                      "product": "62fa5d76530b9271c07fdd6c",
+                      "qtd": 4,
+                      "unitValue": 12.36,
+                      "_id": "62fa9cdde7c53b0b8a9ffdb8"
+                    }
+                  ],
+                  "total": 185.94,
+                  "totalClient": "182,92"
+                }
+              } 
+            }
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Sale not found"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       },
       "delete": {
-        "tags": ["Sale"]
+        "tags": ["Sale"],  
+        "summary": "Remove the sale through its Id",
+        "description": "Remove Sale",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Bad Request",
+                  "details": [
+                    {
+                      "message": "Id entered is not valid"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "404": {
+            "description": "Not Found",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Not Found",
+                  "details": [
+                    {
+                      "message": "Sale not found"
+                    }
+                  ]
+                }
+              } 
+            }
+          },
+          "500": {
+            "description": "Internal server error",        
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "message": {
+                            "type": "string"
+                          }
+                        }                        
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Internal server error",
+                  "details": [
+                    {
+                      "message": "Internal server error"
+                    }
+                  ]
+                }
+              } 
+            }
+          }
+        }
       }
     }
   }
