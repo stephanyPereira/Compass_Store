@@ -6,7 +6,11 @@ class SaleController {
 
     return res.status(201).json(result);
   }
-  // async find(req, res) {}
+  async find(req, res) {
+    const result = await SaleService.find(req.query);
+
+    return res.status(200).json(result);
+  }
 
   async findById(req, res) {
     const { id } = req.params;

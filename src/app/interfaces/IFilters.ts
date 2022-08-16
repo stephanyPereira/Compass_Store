@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export interface IFiltersRegex {
   $regex?: string | undefined;
   $options?: string;
@@ -6,13 +8,13 @@ export interface IFiltersRegex {
 }
 
 export interface IMatchData {
-  [key: string]: IFiltersRegex | Date | number | string;
+  [key: string]: IFiltersRegex | Date | number | string | Types.ObjectId;
 }
 
 export interface IFilter {
   field: string;
   value: string | Date | number | undefined;
-  regex: IFiltersRegex | Date | number | string;
+  regex: IFiltersRegex | Date | number | string | Types.ObjectId;
 }
 
 export interface IFiltersProductRepository {

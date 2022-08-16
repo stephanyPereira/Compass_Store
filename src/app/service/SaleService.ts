@@ -6,8 +6,10 @@ import AppError from '../../errors/AppError';
 import validateDate from '../../utils/ValidateDate';
 import {
   ISale,
+  ISaleFilters,
   ISaleItems,
   ISaleResponse,
+  ISaleResponsePageable,
   ISaleUpdate,
 } from '../interfaces/ISale';
 import SaleRepository from '../repository/SaleRepository';
@@ -58,7 +60,51 @@ class SaleService {
     return this.findById(sale._id.toString());
   }
 
-  // async find(): Promise<any> {}
+  async find(filters: ISaleFilters): Promise<ISaleResponsePageable> {
+    const sale = await SaleRepository.find({
+      page: filters.page ? +filters.page : 1,
+      size: filters.size ? +filters.size : 10,
+      minTotal: +filters.minTotal,
+      maxTotal: +filters.maxTotal,
+      date: filters.date ? validateDate(filters.date.toString()) : filters.date,
+      client: filters.client ? filters.client.trim() : filters.client,
+      product: filters.product ? filters.product.trim() : filters.product,
+      clientCurrency: filters.clientCurrency
+        ? filters.clientCurrency.trim()
+        : filters.clientCurrency,
+    });
+
+    if (sale.docs.length === 0) {
+      throw new AppError('No data found for your search');
+    }
+
+    const sales: ISaleResponse[] = [];
+
+    for (let i = 0; i < sale.docs.length; i++) {
+      const { data } = await axios.get(
+        `https://economia.awesomeapi.com.br/USD-${sale.docs[i].clientCurrency}/1`,
+      );
+      sales.push({
+        _id: sale.docs[i]._id,
+        client: sale.docs[i].client,
+        clientCurrency: sale.docs[i].clientCurrency,
+        date: sale.docs[i].date,
+        items: sale.docs[i].items,
+        total: sale.docs[i].total,
+        totalClient: formatCurrency(data[0].ask * sale.docs[i].total, {
+          precision: 2,
+        }),
+      });
+    }
+
+    return {
+      sales,
+      currentPage: sale.page,
+      pageSize: sale.limit,
+      totalCount: sale.totalDocs,
+      totalPages: sale.totalPages,
+    };
+  }
 
   async findById(id: string): Promise<ISaleResponse> {
     const sale = await this.validateIDSale(id);
