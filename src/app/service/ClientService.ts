@@ -1,9 +1,3 @@
-import {
-  formatCEP,
-  formatCPF,
-  isValidCEP,
-  isValidCPF,
-} from '@brazilian-utils/brazilian-utils';
 import ObjectId from 'mongoose';
 import axios from 'axios';
 import { hash } from 'bcryptjs';
@@ -19,6 +13,7 @@ import {
   IClientUpdate,
 } from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
+import isValidCPF from '../../utils/isValidCPF';
 
 class ClientService {
   async create({
@@ -30,11 +25,11 @@ class ClientService {
     cep,
     number,
   }: IClientBody): Promise<IClientResponse> {
-    if (!isValidCPF(cpf)) {
+    const cpfFormat = cpf.replace(/\D/g, '');
+
+    if (!isValidCPF(cpfFormat)) {
       throw new AppError('Invalid CPF');
     }
-
-    const cpfFormat = cpf.replace(/\D/g, '');
 
     const clientEmail = await ClientRepository.findByEmail(email);
     const clientCPF = await ClientRepository.findByCPF(cpfFormat);
@@ -46,11 +41,11 @@ class ClientService {
     const date = validateDate(birthday);
     const passwordHash = await hash(password, 8);
 
-    if (!isValidCEP(cep)) {
+    const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+
+    if (data.erro) {
       throw new AppError('Invalid CEP');
     }
-
-    const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
     const cepFormat = cep.replace(/\D/g, '');
 
@@ -105,10 +100,13 @@ class ClientService {
       clients.push({
         _id: result.docs[i]._id,
         name: result.docs[i].name,
-        cpf: formatCPF(result.docs[i].cpf),
+        cpf: result.docs[i].cpf.replace(
+          /(\d{3})(\d{3})(\d{3})(\d{2})/,
+          '$1.$2.$3-$4',
+        ),
         birthday: format(new Date(result.docs[i].birthday), 'dd/MM/yyyy'),
         email: result.docs[i].email,
-        cep: formatCEP(result.docs[i].cep),
+        cep: result.docs[i].cep.replace(/(\d{5})(\d{3})/, '$1-$2'),
         uf: result.docs[i].uf,
         city: result.docs[i].city,
         address: result.docs[i].address,
@@ -133,8 +131,8 @@ class ClientService {
     return {
       ...client,
       birthday: format(new Date(client.birthday), 'dd/MM/yyyy'),
-      cep: formatCEP(client.cep),
-      cpf: formatCPF(client.cpf),
+      cep: client.cep.replace(/(\d{5})(\d{3})/, '$1-$2'),
+      cpf: client.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),
     };
   }
 
@@ -157,11 +155,11 @@ class ClientService {
     }
 
     if (cep) {
-      if (!isValidCEP(cep)) {
+      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+
+      if (data.erro) {
         throw new AppError('Invalid CEP');
       }
-
-      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
       client.cep = cep.replace(/\D/g, '');
 

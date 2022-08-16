@@ -1,7 +1,7 @@
-import { formatCurrency } from '@brazilian-utils/brazilian-utils';
 import axios from 'axios';
 import { format } from 'date-fns';
 import ObjectId from 'mongoose';
+import FormatPrice from '../../utils/FormatPrice';
 import AppError from '../../errors/AppError';
 import validateDate from '../../utils/ValidateDate';
 import {
@@ -30,11 +30,7 @@ class SaleService {
       const { price } = await ProductService.findById(
         payload.items[i].product.toString(),
       );
-      if (payload.items[i].qtd <= 0) {
-        throw new AppError(
-          `Value informed for qtd is less than or equal to zero in the product: ${payload.items[i].product}`,
-        );
-      }
+
       hasDuplicatedProducts.push(payload.items[i].product.toString());
 
       total += payload.items[i].qtd * price;
@@ -64,8 +60,8 @@ class SaleService {
     const sale = await SaleRepository.find({
       page: filters.page ? +filters.page : 1,
       size: filters.size ? +filters.size : 10,
-      minTotal: +filters.minTotal,
-      maxTotal: +filters.maxTotal,
+      minTotal: filters.minTotal ? +filters.minTotal : filters.minTotal,
+      maxTotal: filters.maxTotal ? +filters.maxTotal : filters.maxTotal,
       date: filters.date ? validateDate(filters.date.toString()) : filters.date,
       client: filters.client ? filters.client.trim() : filters.client,
       product: filters.product ? filters.product.trim() : filters.product,
@@ -84,6 +80,12 @@ class SaleService {
       const { data } = await axios.get(
         `https://economia.awesomeapi.com.br/USD-${sale.docs[i].clientCurrency}/1`,
       );
+
+      const totalClient = FormatPrice(
+        data[0].ask * sale.docs[i].total,
+        sale.docs[i].clientCurrency,
+      );
+
       sales.push({
         _id: sale.docs[i]._id,
         client: sale.docs[i].client,
@@ -91,9 +93,7 @@ class SaleService {
         date: format(new Date(sale.docs[i].date), 'dd/MM/yyyy'),
         items: sale.docs[i].items,
         total: sale.docs[i].total,
-        totalClient: formatCurrency(data[0].ask * sale.docs[i].total, {
-          precision: 2,
-        }),
+        totalClient,
       });
     }
 
@@ -113,6 +113,11 @@ class SaleService {
       `https://economia.awesomeapi.com.br/USD-${sale.clientCurrency}/1`,
     );
 
+    const totalClient = FormatPrice(
+      data[0].ask * sale.total,
+      sale.clientCurrency,
+    );
+
     return {
       _id: sale._id,
       client: sale.client,
@@ -120,9 +125,7 @@ class SaleService {
       date: format(new Date(sale.date), 'dd/MM/yyyy'),
       items: sale.items,
       total: sale.total,
-      totalClient: formatCurrency(data[0].ask * sale.total, {
-        precision: 2,
-      }),
+      totalClient,
     };
   }
 
@@ -149,11 +152,6 @@ class SaleService {
             items[i].product.toString(),
           );
 
-          if (items[i].qtd && items[i].qtd <= 0) {
-            throw new AppError(
-              `Value informed for qtd is less than or equal to zero in the product: ${items[i].product}`,
-            );
-          }
           hasDuplicatedProducts.push(items[i].product.toString());
 
           total += items[i].qtd * price;

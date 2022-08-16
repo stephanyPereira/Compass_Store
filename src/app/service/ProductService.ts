@@ -11,10 +11,6 @@ import ProductRepository from '../repository/ProductRepository';
 
 class ProductService {
   async create(payload: IProduct): Promise<IProductResponse> {
-    if (payload.price <= 0) {
-      throw new AppError('Reported price is less than or equal to zero');
-    }
-
     const result = await ProductRepository.create(payload);
 
     return this.findById(result._id.toString());
@@ -22,9 +18,11 @@ class ProductService {
 
   async find(payload: IProductFilters): Promise<IProductResponsePageable> {
     const result = await ProductRepository.find({
-      ...payload,
-      minPrice: +payload.minPrice,
-      maxPrice: +payload.maxPrice,
+      name: payload.name ? payload.name.trim() : payload.name,
+      category: payload.category ? payload.category.trim() : payload.category,
+      currency: payload.currency ? payload.currency.trim() : payload.currency,
+      minPrice: payload.minPrice ? +payload.minPrice : payload.minPrice,
+      maxPrice: payload.maxPrice ? +payload.maxPrice : payload.maxPrice,
       page: payload.page ? +payload.page : 1,
       size: payload.size ? +payload.size : 10,
     });
@@ -66,9 +64,6 @@ class ProductService {
     }
 
     if (price) {
-      if (price <= 0) {
-        throw new AppError('Reported price is less than or equal to zero');
-      }
       product.price = price;
     }
 
