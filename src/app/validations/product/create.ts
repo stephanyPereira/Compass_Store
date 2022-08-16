@@ -5,10 +5,10 @@ import AppError from '../../../errors/AppError';
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const schema = Joi.object({
-      name: Joi.string().required(),
-      category: Joi.string().required(),
-      currency: Joi.string(),
-      price: Joi.number().required(),
+      name: Joi.string().trim().not().empty().required(),
+      category: Joi.string().trim().not().empty().required(),
+      currency: Joi.string().trim().not().empty(),
+      price: Joi.number().greater(0).not().empty().required(),
     });
 
     const { error } = await schema.validate(req.body, { abortEarly: true });

@@ -5,13 +5,17 @@ import AppError from '../../../errors/AppError';
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const schema = Joi.object({
-      clientCurrency: Joi.string(),
-      date: Joi.string().regex(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/),
+      clientCurrency: Joi.string().trim().not().empty(),
+      date: Joi.string()
+        .trim()
+        .not()
+        .empty()
+        .regex(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/),
       items: Joi.array()
         .items(
           Joi.object({
-            product: Joi.string().required(),
-            qtd: Joi.number().required(),
+            product: Joi.string().trim().not().empty().required(),
+            qtd: Joi.number().not().empty().required(),
           }).min(1),
         )
         .min(1),

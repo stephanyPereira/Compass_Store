@@ -5,11 +5,15 @@ import AppError from '../../../errors/AppError';
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const schema = Joi.object({
-      name: Joi.string(),
-      birthday: Joi.string().regex(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/),
-      password: Joi.string().min(6),
-      cep: Joi.string(),
-      number: Joi.number(),
+      name: Joi.string().trim().not().empty(),
+      birthday: Joi.string()
+        .trim()
+        .not()
+        .empty()
+        .regex(/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/),
+      password: Joi.string().trim().min(6),
+      cep: Joi.string().trim().not().empty(),
+      number: Joi.number().not().empty(),
     }).min(1);
 
     const { error } = await schema.validate(req.body, { abortEarly: true });
