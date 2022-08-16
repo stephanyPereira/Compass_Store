@@ -42,9 +42,9 @@ class ClientController {
   async remove(req: Request, res: Response) {
     const { id } = req.params;
 
-    const result = await ClientService.remove(id);
+    await ClientService.remove(id);
 
-    return res.status(204).json(result);
+    return res.status(204).send();
   }
 }
 

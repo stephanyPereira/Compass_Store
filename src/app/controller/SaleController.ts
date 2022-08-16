@@ -32,9 +32,9 @@ class SaleController {
   async delete(req: Request, res: Response) {
     const { id } = req.params;
 
-    const result = await SaleService.remove(id);
+    await SaleService.remove(id);
 
-    return res.status(204).json(result);
+    return res.status(204).send();
   }
 }
 

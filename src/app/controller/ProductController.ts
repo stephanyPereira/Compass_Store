@@ -34,9 +34,9 @@ class ProductController {
   async remove(req: Request, res: Response) {
     const { id } = req.params;
 
-    const result = await ProductService.remove(id);
+    await ProductService.remove(id);
 
-    return res.status(204).json(result);
+    return res.status(204).send();
   }
 }
 
