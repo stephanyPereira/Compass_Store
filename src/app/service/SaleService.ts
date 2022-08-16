@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { format } from 'date-fns';
 import ObjectId from 'mongoose';
 import FormatPrice from '../../utils/FormatPrice';
@@ -15,6 +14,7 @@ import {
 import SaleRepository from '../repository/SaleRepository';
 import ClientService from './ClientService';
 import ProductService from './ProductService';
+import QuotationRepository from '../repository/QuotationRepository';
 
 class SaleService {
   async create(payload: ISale): Promise<ISaleResponse> {
@@ -77,12 +77,10 @@ class SaleService {
     const sales: ISaleResponse[] = [];
 
     for (let i = 0; i < sale.docs.length; i++) {
-      const { data } = await axios.get(
-        `https://economia.awesomeapi.com.br/USD-${sale.docs[i].clientCurrency}/1`,
-      );
+      const ask = await QuotationRepository.find(sale.docs[i].clientCurrency);
 
       const totalClient = FormatPrice(
-        data[0].ask * sale.docs[i].total,
+        ask * sale.docs[i].total,
         sale.docs[i].clientCurrency,
       );
 
@@ -109,14 +107,9 @@ class SaleService {
   async findById(id: string): Promise<ISaleResponse> {
     const sale = await this.validateIDSale(id);
 
-    const { data } = await axios.get(
-      `https://economia.awesomeapi.com.br/USD-${sale.clientCurrency}/1`,
-    );
+    const ask = await QuotationRepository.find(sale.clientCurrency);
 
-    const totalClient = FormatPrice(
-      data[0].ask * sale.total,
-      sale.clientCurrency,
-    );
+    const totalClient = FormatPrice(ask * sale.total, sale.clientCurrency);
 
     return {
       _id: sale._id,
