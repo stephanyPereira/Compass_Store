@@ -93,15 +93,18 @@ class ProductRepository {
       });
   }
 
-  async update(id: string, payload: IProductUpdate): Promise<void> {
-    await ProductSchema.findOneAndUpdate(
+  async update(
+    id: string,
+    payload: IProductUpdate,
+  ): Promise<IProductResponse | null> {
+    return ProductSchema.findOneAndUpdate(
       { _id: new Types.ObjectId(id) },
       payload,
     );
   }
 
-  async remove(id: string): Promise<void> {
-    await ProductSchema.deleteOne({ _id: new Types.ObjectId(id) });
+  async remove(id: string): Promise<null> {
+    return ProductSchema.findByIdAndDelete({ _id: new Types.ObjectId(id) });
   }
 }
 

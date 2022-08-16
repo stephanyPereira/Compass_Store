@@ -140,15 +140,18 @@ class ClientRepository {
     return ClientSchema.find({ cpf });
   }
 
-  async update(id: string, update: IClientUpdate): Promise<void> {
-    await ClientSchema.findOneAndUpdate(
+  async update(
+    id: string,
+    update: IClientUpdate,
+  ): Promise<IClientResponse | null> {
+    return ClientSchema.findOneAndUpdate(
       { _id: new Types.ObjectId(id) },
       update,
     );
   }
 
-  async remove(id: string): Promise<void> {
-    await ClientSchema.deleteOne({ _id: new Types.ObjectId(id) });
+  async remove(id: string): Promise<null> {
+    return ClientSchema.findByIdAndDelete({ _id: new Types.ObjectId(id) });
   }
 }
 

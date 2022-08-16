@@ -82,12 +82,18 @@ class SaleRepository {
     return SaleSchema.findById(id);
   }
 
-  async update(id: string, payload: ISaleUpdate): Promise<void> {
-    await SaleSchema.findOneAndUpdate({ _id: new Types.ObjectId(id) }, payload);
+  async update(
+    id: string,
+    payload: ISaleUpdate,
+  ): Promise<ISaleResponse | null> {
+    return SaleSchema.findOneAndUpdate(
+      { _id: new Types.ObjectId(id) },
+      payload,
+    );
   }
 
-  async delete(id: string): Promise<void> {
-    await SaleSchema.findByIdAndDelete(id);
+  async delete(id: string): Promise<null> {
+    return SaleSchema.findByIdAndDelete(id);
   }
 }
 
