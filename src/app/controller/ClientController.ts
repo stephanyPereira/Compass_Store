@@ -1,7 +1,9 @@
+import { Request, Response } from 'express';
+import { IClientFilters } from '../interfaces/IClient';
 import ClientService from '../service/ClientService';
 
 class ClientController {
-  async create(req, res) {
+  async create(req: Request, res: Response) {
     const { name, cpf, birthday, email, password, cep, number } = req.body;
     const result = await ClientService.create({
       name,
@@ -15,13 +17,13 @@ class ClientController {
     return res.status(201).json(result);
   }
 
-  async find(req, res) {
-    const result = await ClientService.find(req.query);
+  async find(req: Request, res: Response) {
+    const result = await ClientService.find(req.query as IClientFilters);
 
     return res.status(200).json(result);
   }
 
-  async findById(req, res) {
+  async findById(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ClientService.findById(id);
@@ -29,7 +31,7 @@ class ClientController {
     return res.status(200).json(result);
   }
 
-  async update(req, res) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ClientService.update(id, req.body);
@@ -37,7 +39,7 @@ class ClientController {
     return res.status(200).json(result);
   }
 
-  async remove(req, res) {
+  async remove(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ClientService.remove(id);

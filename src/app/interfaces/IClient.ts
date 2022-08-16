@@ -62,17 +62,17 @@ export interface IClientUpdate {
 }
 
 export interface IClientFilters {
-  name: string;
-  cpf: string;
-  birthday: string | Date;
-  email: string;
-  cep: string;
-  uf: string;
-  city: string;
-  address: string;
-  number: number;
+  name?: string;
+  cpf?: string;
+  birthday?: string | Date;
+  email?: string;
+  cep?: string;
+  uf?: string;
+  city?: string;
+  address?: string;
+  number?: number;
   complement?: string;
-  neighborhood: string;
-  page: number;
-  size: number;
+  neighborhood?: string;
+  page?: number;
+  size?: number;
 }

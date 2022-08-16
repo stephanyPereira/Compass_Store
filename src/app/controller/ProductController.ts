@@ -1,19 +1,21 @@
+import { Request, Response } from 'express';
+import { IProductFilters } from '../interfaces/IProduct';
 import ProductService from '../service/ProductService';
 
 class ProductController {
-  async create(req, res) {
+  async create(req: Request, res: Response) {
     const result = await ProductService.create(req.body);
 
     return res.status(201).json(result);
   }
 
-  async find(req, res) {
-    const result = await ProductService.find(req.query);
+  async find(req: Request, res: Response) {
+    const result = await ProductService.find(req.query as IProductFilters);
 
     return res.status(200).json(result);
   }
 
-  async findById(req, res) {
+  async findById(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ProductService.findById(id);
@@ -21,7 +23,7 @@ class ProductController {
     return res.status(200).json(result);
   }
 
-  async update(req, res) {
+  async update(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ProductService.update(id, req.body);
@@ -29,7 +31,7 @@ class ProductController {
     return res.status(200).json(result);
   }
 
-  async remove(req, res) {
+  async remove(req: Request, res: Response) {
     const { id } = req.params;
 
     const result = await ProductService.remove(id);

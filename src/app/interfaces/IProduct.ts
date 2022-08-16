@@ -24,13 +24,13 @@ export interface IProductResponsePageable {
 }
 
 export interface IProductFilters {
-  name: string;
-  category: string;
-  currency: string;
-  minPrice: number;
-  maxPrice: number;
-  page: number;
-  size: number;
+  name?: string;
+  category?: string;
+  currency?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  page?: number;
+  size?: number;
 }
 
 export interface IProductUpdate {

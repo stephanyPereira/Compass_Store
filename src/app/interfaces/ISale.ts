@@ -59,12 +59,12 @@ export interface ISaleResponsePageable {
 }
 
 export interface ISaleFilters {
-  page: number;
-  size: number;
-  client: string;
+  page?: number;
+  size?: number;
+  client?: string;
   clientCurrency?: string;
-  date: string | Date;
-  product: string;
-  minTotal: number;
-  maxTotal: number;
+  date?: string | Date;
+  product?: string;
+  minTotal?: number;
+  maxTotal?: number;
 }
