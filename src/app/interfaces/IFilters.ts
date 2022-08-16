@@ -8,13 +8,19 @@ export interface IFiltersRegex {
 }
 
 export interface IMatchData {
-  [key: string]: IFiltersRegex | Date | number | string | Types.ObjectId;
+  [key: string]:
+    | IFiltersRegex
+    | Date
+    | number
+    | string
+    | undefined
+    | Types.ObjectId;
 }
 
 export interface IFilter {
   field: string;
   value: string | Date | number | undefined;
-  regex: IFiltersRegex | Date | number | string | Types.ObjectId;
+  regex: IFiltersRegex | Date | number | string | undefined | Types.ObjectId;
 }
 
 export interface IFiltersProductRepository {
