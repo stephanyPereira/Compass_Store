@@ -1,5 +1,4 @@
 import ObjectId from 'mongoose';
-import axios from 'axios';
 import { hash } from 'bcryptjs';
 import { format } from 'date-fns';
 
@@ -14,6 +13,7 @@ import {
 } from '../interfaces/IClient';
 import ClientRepository from '../repository/ClientRepository';
 import isValidCPF from '../../utils/isValidCPF';
+import CEPRepository from '../repository/CEPRepository';
 
 class ClientService {
   async create({
@@ -41,9 +41,9 @@ class ClientService {
     const date = validateDate(birthday);
     const passwordHash = await hash(password, 8);
 
-    const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+    const dataCEP = await CEPRepository.find(cep);
 
-    if (data.erro) {
+    if (dataCEP.erro) {
       throw new AppError('Invalid CEP');
     }
 
@@ -56,12 +56,12 @@ class ClientService {
       email,
       password: passwordHash,
       cep: cepFormat,
-      uf: data.uf,
-      city: data.localidade,
-      address: data.logradouro,
+      uf: dataCEP.uf,
+      city: dataCEP.localidade,
+      address: dataCEP.logradouro,
       number,
-      complement: data.complemento,
-      neighborhood: data.bairro,
+      complement: dataCEP.complemento,
+      neighborhood: dataCEP.bairro,
     });
 
     return this.findById(result._id.toString());
@@ -155,19 +155,19 @@ class ClientService {
     }
 
     if (cep) {
-      const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      const dataCEP = await CEPRepository.find(cep);
 
-      if (data.erro) {
+      if (dataCEP.erro) {
         throw new AppError('Invalid CEP');
       }
 
       client.cep = cep.replace(/\D/g, '');
 
-      client.uf = data.uf;
-      client.city = data.localidade;
-      client.address = data.logradouro;
-      client.complement = data.complemento;
-      client.neighborhood = data.bairro;
+      client.uf = dataCEP.uf;
+      client.city = dataCEP.localidade;
+      client.address = dataCEP.logradouro;
+      client.complement = dataCEP.complemento;
+      client.neighborhood = dataCEP.bairro;
     }
 
     if (number) {
